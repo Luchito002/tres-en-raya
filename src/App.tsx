@@ -8,11 +8,10 @@ function App() {
   const [final, setFinal] = useState<boolean>(false)
   const [finalMensaje, setFinalMensaje] = useState<string>("");
 
-  //const [primeraJugada, setPrimeraJugada] = useState<boolean>(true)
 
   async function obtenerPosicion(tableroActual: (string | null)[]) {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/tree', {
+      const response = await fetch('https://flask-production-9c23.up.railway.app/api/tree', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
