@@ -6,7 +6,8 @@ function App() {
   )
 
   const [final, setFinal] = useState<boolean>(false)
-  const [finalMensaje, setFinalMensaje] = useState<string>("");
+  const [finalMensaje, setFinalMensaje] = useState<string>("")
+  const [primeraJugada, setPrimeraJugada] = useState<boolean>(true)
 
 
   async function obtenerPosicion(tableroActual: (string | null)[]) {
@@ -30,17 +31,90 @@ function App() {
       console.error('Error:', error);
     }
   }
+  const tableroIguales = (tableroActual: (string | null)[], tableroComparar: (string | null)[]) => {
+    for (let i = 0; i < tableroActual.length; i++) {
+      if (tableroActual[i] !== tableroComparar[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   const handleClick = (index: number) => {
     if (arregloCasillas[index] === null) {
       const tableroActual = [...arregloCasillas];
       tableroActual[index] = "O"
 
-      if (tableroActual[4] === null) {
-        tableroActual[4] = "X"
+      /*if (tableroIguales(tableroActual, ['O', null, 'X', null, null, 'O', null, null, null])) {
+        tableroActual[3] = "X"
+        setPrimeraJugada(false)
         setArregloCasillas(tableroActual)
         return
       }
+
+      if (tableroIguales(tableroActual, [null, 'O', 'O', 'O', 'X', null, 'X', 'X', 'O'])) {
+        tableroActual[3] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+
+      if (tableroActual[5] === "O" && primeraJugada) {
+        tableroActual[2] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }*/
+
+      if ((tableroActual[0] === "O" || tableroActual[8] === "O") && primeraJugada) {
+        tableroActual[7] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+
+      if (tableroIguales(tableroActual, ['O', null, null, null, null, 'O', null, 'X', null])) {
+        tableroActual[4] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+
+      if (tableroIguales(tableroActual, ['O', null, null, null, 'X', 'O', null, null, null])) {
+        tableroActual[4] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+
+      if (tableroIguales(tableroActual, [null, 'O', null, null, 'X', 'O', null, null, null])) {
+        tableroActual[8] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+
+      if ((tableroActual[3] === 'O' || tableroActual[5] === 'O') && primeraJugada) {
+        tableroActual[4] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+      /*if (tableroActual[4] === null && primeraJugada) {
+        tableroActual[4] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }*/
+
+      if (tableroActual[4] === "O" && primeraJugada) {
+        tableroActual[0] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+
+      setPrimeraJugada(false)
 
       if (verificarGanador(tableroActual)) {
         setArregloCasillas(tableroActual)
@@ -117,6 +191,7 @@ function App() {
     setArregloCasillas([null, null, null, null, null, null, null, null, null])
     setFinalMensaje("")
     setFinal(false)
+    setPrimeraJugada(true)
   }
 
   const renderButton = (index: number) => {
@@ -157,7 +232,7 @@ function App() {
       </div>
       {
         finalMensaje !== "" && (
-          <button 
+          <button
             type="button"
             className="mb-5 text-white text-2xl mt-8 bg-green-600 p-4 rounded-xl hover:bg-green-800 hover:text-gray-400"
             onClick={reiniciar}
