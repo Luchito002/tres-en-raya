@@ -45,27 +45,6 @@ function App() {
       const tableroActual = [...arregloCasillas];
       tableroActual[index] = "O"
 
-      /*if (tableroIguales(tableroActual, ['O', null, 'X', null, null, 'O', null, null, null])) {
-        tableroActual[3] = "X"
-        setPrimeraJugada(false)
-        setArregloCasillas(tableroActual)
-        return
-      }
-
-      if (tableroIguales(tableroActual, [null, 'O', 'O', 'O', 'X', null, 'X', 'X', 'O'])) {
-        tableroActual[3] = "X"
-        setPrimeraJugada(false)
-        setArregloCasillas(tableroActual)
-        return
-      }
-
-      if (tableroActual[5] === "O" && primeraJugada) {
-        tableroActual[2] = "X"
-        setPrimeraJugada(false)
-        setArregloCasillas(tableroActual)
-        return
-      }*/
-
       if ((tableroActual[0] === "O" || tableroActual[8] === "O") && primeraJugada) {
         tableroActual[7] = "X"
         setPrimeraJugada(false)
@@ -81,7 +60,7 @@ function App() {
       }
 
       if (tableroIguales(tableroActual, ['O', null, null, null, 'X', 'O', null, null, null])) {
-        tableroActual[4] = "X"
+        tableroActual[8] = "X"
         setPrimeraJugada(false)
         setArregloCasillas(tableroActual)
         return
