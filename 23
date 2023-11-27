@@ -1,0 +1,150 @@
+import { useState } from "react";
+
+function App() {
+  const [arregloCasillas, setArregloCasillas] = useState<(string | null)[]>(
+    [null, null, null, null, null, null, null, null, null]
+  )
+
+  const [final, setFinal] = useState<boolean>(false);
+  const [finalMensaje, setFinalMensaje] = useState<string>();
+
+  //const [primeraJugada, setPrimeraJugada] = useState<boolean>(true)
+
+  async function obtenerPosicion(tableroActual: (string | null)[]) {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/tree', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ arreglo_tablero: tableroActual }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data.posicion
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  const handleClick = (index: number) => {
+    if (arregloCasillas[index] === null) {
+      const tableroActual = [...arregloCasillas];
+      tableroActual[index] = "O"
+
+      if (tableroActual[4] === null) {
+        tableroActual[4] = "X"
+        setArregloCasillas(tableroActual)
+        return
+      }
+
+      if (verificarGanador(tableroActual)) {
+        alert(`El ganador es: ${verificarGanador(tableroActual)}`)
+        return
+      }
+
+      if (verificarEmpate(tableroActual)) {
+        alert("EMPATE")
+        return
+      }
+
+      computadoraJugada(tableroActual)
+    }
+  }
+
+  /*
+        if (primeraJugada) {
+          let indiceAleatorio;
+          do {
+            indiceAleatorio = Math.floor(Math.random() * tableroActual.length);
+          } while (indiceAleatorio === index);
+          tableroActual[indiceAleatorio] = "X";
+          setPrimeraJugada(false);
+          setArregloCasillas(tableroActual)
+        } else {
+  */
+
+  const computadoraJugada = async (tableroActual: (string | null)[]) => {
+    console.log("Antes de la asignar posicion")
+    console.log(tableroActual)
+    const posicion = await obtenerPosicion(tableroActual)
+    tableroActual[posicion] = "X"
+    setArregloCasillas(tableroActual)
+
+    if (verificarGanador(tableroActual)) {
+      alert(`El ganador es: ${verificarGanador(tableroActual)}`)
+    }
+
+    if (verificarEmpate(tableroActual)) {
+      alert("EMPATE")
+    }
+    console.log("Despues de la asignar posicion")
+    console.log(tableroActual)
+  }
+
+  const verificarGanador = (tablero: (string | null)[]): string | null => {
+    const lineasGanadoras = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Filas
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columnas
+      [0, 4, 8], [2, 4, 6]             // Diagonales
+    ];
+
+    for (const linea of lineasGanadoras) {
+      const [a, b, c] = linea;
+      if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
+        return tablero[a];
+      }
+    }
+
+    return null;
+  };
+
+  const verificarEmpate = (tablero: (string | null)[]): boolean => {
+    return tablero.every(casilla => casilla !== null);
+  };
+
+  const renderButton = (index: number) => {
+    return (
+      <button
+        key={index}
+        type="button"
+        onClick={() => handleClick(index)}
+        title={`Casilla ${index + 1}`}
+        className="h-20 w-20 bg-[#087a8b] relative text-white"
+      >
+        <p className="text-4xl">
+          {arregloCasillas[index]}
+        </p>
+
+        <span className="absolute bottom-0 right-2 text-gray-300">
+          {index + 1}
+        </span>
+      </button>
+    )
+  }
+
+  return (
+    <div className="flex justify-center items-center h-screen bg-[#073238]">
+      <div className="grid grid-cols-3 gap-2">
+        {arregloCasillas.map((_, index) => (
+          renderButton(index)
+        ))}
+
+        {
+          final && (
+            <div>
+              {finalMensaje}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  )
+}
+
+export default App

@@ -1,0 +1,76 @@
+import { useState } from "react";
+
+function App() {
+
+  const [arregloCasillas, setArregloCasillas] = useState<string[]>(
+    [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+  )
+
+  async function sendData() {
+    const arrayTree = [1, 2, 3, 4, 5];
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/tree', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ array_tree: arrayTree }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+
+      const data = await response.json();
+      console.log(data); // Esto imprimirá la respuesta del servidor (si la hay).
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  const handleClick = (index: number) => {
+    console.log(index)
+
+    if (arregloCasillas[index] === " ") {
+      const nuevoArregloCasillas = [...arregloCasillas];
+      nuevoArregloCasillas[index] = "X"; // Insertar "X" en la posición indicada por el índice
+      setArregloCasillas(nuevoArregloCasillas);
+    }
+
+    console.log(arregloCasillas)
+  }
+
+
+  const renderButton = (index: number) => {
+    return (
+      <button
+        key={index}
+        type="button"
+        onClick={() => handleClick(index)}
+        title={`Casilla ${index + 1}`}
+        className="h-20 w-20 bg-[#087a8b] relative text-white"
+      >
+        <p className="text-4xl">
+          {arregloCasillas[index]}
+        </p>
+
+        <span className="absolute bottom-0 right-2 text-gray-300">
+          {index + 1}
+        </span>
+      </button>
+    )
+  }
+
+  return (
+    <div className="flex justify-center items-center h-screen bg-[#073238]">
+      <div className="grid grid-cols-3 gap-2">
+        {arregloCasillas.map((_, index) => (
+          renderButton(index)
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default App
