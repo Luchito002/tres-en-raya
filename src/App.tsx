@@ -45,49 +45,28 @@ function App() {
       const tableroActual = [...arregloCasillas];
       tableroActual[index] = "O"
 
-      if ((tableroActual[0] === "O" || tableroActual[8] === "O") && primeraJugada) {
-        tableroActual[7] = "X"
+      if (tableroIguales([null, null, 'O', null, 'X', null, 'O', null, null], tableroActual)) {
+        tableroActual[1] = "X"
+        setPrimeraJugada(false)
+        setArregloCasillas(tableroActual)
+        return
+      }
+      if (tableroIguales([null, 'O', null, 'O', 'X', null, null, null, null], tableroActual)) {
+        tableroActual[0] = "X"
         setPrimeraJugada(false)
         setArregloCasillas(tableroActual)
         return
       }
 
-      if (tableroIguales(tableroActual, ['O', null, null, null, null, 'O', null, 'X', null])) {
+      if (tableroActual[4] === null && primeraJugada) {
         tableroActual[4] = "X"
         setPrimeraJugada(false)
         setArregloCasillas(tableroActual)
         return
       }
-
-      if (tableroIguales(tableroActual, ['O', null, null, null, 'X', 'O', null, null, null])) {
-        tableroActual[8] = "X"
-        setPrimeraJugada(false)
-        setArregloCasillas(tableroActual)
-        return
-      }
-
-      if (tableroIguales(tableroActual, [null, 'O', null, null, 'X', 'O', null, null, null])) {
-        tableroActual[8] = "X"
-        setPrimeraJugada(false)
-        setArregloCasillas(tableroActual)
-        return
-      }
-
-      if ((tableroActual[3] === 'O' || tableroActual[5] === 'O') && primeraJugada) {
-        tableroActual[4] = "X"
-        setPrimeraJugada(false)
-        setArregloCasillas(tableroActual)
-        return
-      }
-      /*if (tableroActual[4] === null && primeraJugada) {
-        tableroActual[4] = "X"
-        setPrimeraJugada(false)
-        setArregloCasillas(tableroActual)
-        return
-      }*/
 
       if (tableroActual[4] === "O" && primeraJugada) {
-        tableroActual[0] = "X"
+        tableroActual[8] = "X"
         setPrimeraJugada(false)
         setArregloCasillas(tableroActual)
         return
